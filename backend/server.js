@@ -6,13 +6,17 @@ const cors = require("cors");
 dotenv.config();
 
 const app = express();
-app.use(express.json());
-app.use(cors());
 
+// ✅ MIDDLEWARE (ORDER MATTERS)
+app.use(cors());              // ← HERE
+app.use(express.json());      // ← then this
+
+// DB connection
 mongoose.connect(process.env.MONGO_URI)
-.then(() => console.log("MongoDB Connected"))
-.catch(err => console.log(err));
+  .then(() => console.log("MongoDB Connected"))
+  .catch(err => console.log(err));
 
+// ✅ ROUTES AFTER MIDDLEWARE
 app.use("/api", require("./routes/authRoutes"));
 
 const PORT = process.env.PORT || 5000;
